@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.15.0",
+    "dotenv": "^17.3.1",
+    "python-dotenv": "^0.0.1-security",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.13.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

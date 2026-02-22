@@ -1,7 +1,17 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect } from "react";
 
 const Profile = () => {
-    const { user, isAuthenticated, isLoading } = useAuth0();
+    const { user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+    // add getAccessTokenSilently
+    useEffect(() => {
+        if (isAuthenticated) {
+            getAccessTokenSilently().then(token => {
+                console.log("Access token:", token);
+                console.log("User:", user);
+            });
+        }
+    }, [isAuthenticated]);
 
     if (isLoading) {
         return <div className="loading-text">Loading profile...</div>;
