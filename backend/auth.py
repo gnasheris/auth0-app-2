@@ -50,7 +50,20 @@ def decode_token(token: str) -> dict:
         raise HTTPException(status_code=401, detail=f"Invalid token: {str(e)}")
 
 
-def get_current_user(
+async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Security(bearer_scheme)
 ) -> dict:
-    return decode_token(credentials.credentials)
+    payload = decode_token(credentials.credentials)
+    if not payload.get("email"):
+        email = await get_user_email(credentials.credentials)
+        payload["email"] = email
+    return payload
+
+async def get_user_email(token: str) -> str:
+    async with httpx.AsyncClient() as client:
+        r = await client.get(
+            f"https://{AUTH0_DOMAIN}/userinfo",
+            headers={"Authorization": f"Bearer {token}"}
+        )
+        data = r.json()
+        return data.get("email")

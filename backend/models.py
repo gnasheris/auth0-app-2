@@ -124,3 +124,13 @@ class SampleMetadata(Base):
     value = Column(String)
 
     sample = relationship("Sample", back_populates="metadata_")
+
+class ProjectInvite(Base):
+    __tablename__ = "project_invites"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
+    email = Column(String, nullable=False)
+    role = Column(String, default="viewer")
+    created_at = Column(DateTime, server_default=func.now())
+
+    project = relationship("Project")

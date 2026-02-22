@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
-from models import User, Project, ProjectMember
+from models import User, Project, ProjectMember, ProjectInvite
 from dependencies import get_or_create_user
 
 router = APIRouter()
@@ -34,3 +34,21 @@ def get_project(project_id: int, user: User = Depends(get_or_create_user), db: S
     if not membership:
         raise HTTPException(status_code=403, detail="Not a member of this project")
     return membership.project
+
+@router.delete("/projects/{project_id}")
+def delete_project(project_id: int, user: User = Depends(get_or_create_user), db: Session = Depends(get_db)):
+    membership = db.query(ProjectMember).filter(
+        ProjectMember.project_id == project_id,
+        ProjectMember.user_id == user.id,
+        ProjectMember.role == "admin"
+    ).first()
+    if not membership:
+        raise HTTPException(staxtus_code=403, detail="Must be admin to delete project")
+    
+    # delete invites first to avoid foreign key violation
+    db.query(ProjectInvite).filter(ProjectInvite.project_id == project_id).delete()
+    
+    project = db.query(Project).filter(Project.id == project_id).first()
+    db.delete(project)
+    db.commit()
+    return {"message": "Project deleted"}

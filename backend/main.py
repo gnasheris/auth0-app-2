@@ -1,7 +1,7 @@
 # main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import projects, datasets, patients
+from routers import projects, datasets, patients, invites
 
 app = FastAPI()
 
@@ -16,6 +16,8 @@ app.add_middleware(
 app.include_router(projects.router, prefix="/api")
 app.include_router(datasets.router, prefix="/api")
 app.include_router(patients.router, prefix="/api")
+app.include_router(invites.router, prefix="/api")
+
 
 @app.get("/health")
 def health():
