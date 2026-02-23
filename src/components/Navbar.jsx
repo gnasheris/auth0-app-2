@@ -1,4 +1,4 @@
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth } from 'react-oidc-context';
 import { useLocation } from 'react-router-dom';
 
 const pageTitles = {
@@ -9,8 +9,9 @@ const pageTitles = {
 };
 
 function Navbar({ darkMode, setDarkMode }) {
-    const { logout } = useAuth0();
+    const auth = useAuth();
     const location = useLocation();
+
     const title = pageTitles[location.pathname] || 'Project Detail';
 
     return (

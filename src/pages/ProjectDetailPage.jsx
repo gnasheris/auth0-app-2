@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth } from 'react-oidc-context';
 import { useEffect, useState } from 'react';
 import Layout from '../components/Layout.jsx';
+import React from 'react';
 
 function ProjectDetailPage() {
     const { id } = useParams();
-    const { getAccessTokenSilently } = useAuth0();
+    const auth = useAuth();
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
     const [datasets, setDatasets] = useState([]);
@@ -20,12 +21,8 @@ function ProjectDetailPage() {
     const [inviteEmail, setInviteEmail] = useState("");
     const [inviteMessage, setInviteMessage] = useState("");
 
-    async function getToken() {
-        return await getAccessTokenSilently();
-    }
-
     async function loadProject() {
-        const token = await getToken();
+        const token = auth.user?.access_token;
         const res = await fetch(`http://127.0.0.1:8000/api/projects/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -33,7 +30,7 @@ function ProjectDetailPage() {
     }
 
     async function loadDatasets() {
-        const token = await getToken();
+        const token = auth.user?.access_token;
         const res = await fetch(`http://127.0.0.1:8000/api/projects/${id}/datasets`, {
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -41,7 +38,7 @@ function ProjectDetailPage() {
     }
 
     async function loadPatients() {
-        const token = await getToken();
+        const token = auth.user?.access_token;
         const res = await fetch(`http://127.0.0.1:8000/api/projects/${id}/patients`, {
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -49,7 +46,7 @@ function ProjectDetailPage() {
     }
 
     async function loadSamples(patientId) {
-        const token = await getToken();
+        const token = auth.user?.access_token;
         const res = await fetch(`http://127.0.0.1:8000/api/projects/${id}/patients/${patientId}/samples`, {
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -58,7 +55,7 @@ function ProjectDetailPage() {
     }
 
     async function loadMembers() {
-        const token = await getToken();
+        const token = auth.user?.access_token;
         const res = await fetch(`http://127.0.0.1:8000/api/projects/${id}/members`, {
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -74,7 +71,7 @@ function ProjectDetailPage() {
 
     async function handleCreateDataset() {
         if (!newDatasetName.trim()) return;
-        const token = await getToken();
+        const token = auth.user?.access_token;
         await fetch(`http://127.0.0.1:8000/api/projects/${id}/datasets?name=${encodeURIComponent(newDatasetName)}`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` }
@@ -85,7 +82,7 @@ function ProjectDetailPage() {
 
     async function handleCreatePatient() {
         if (!newPatientId.trim()) return;
-        const token = await getToken();
+        const token = auth.user?.access_token;
         await fetch(`http://127.0.0.1:8000/api/projects/${id}/patients?ext_patient_id=${encodeURIComponent(newPatientId)}`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` }
@@ -96,7 +93,7 @@ function ProjectDetailPage() {
 
     async function handleCreateSample(patientId) {
         if (!newSampleId.trim()) return;
-        const token = await getToken();
+        const token = auth.user?.access_token;
         await fetch(`http://127.0.0.1:8000/api/projects/${id}/patients/${patientId}/samples?ext_sample_id=${encodeURIComponent(newSampleId)}`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` }
@@ -107,7 +104,7 @@ function ProjectDetailPage() {
 
     async function handleInvite() {
         if (!inviteEmail.trim()) return;
-        const token = await getToken();
+        const token = auth.user?.access_token;
         const res = await fetch(`http://127.0.0.1:8000/api/projects/${id}/invite?email=${encodeURIComponent(inviteEmail)}&role=viewer`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` }
@@ -212,7 +209,7 @@ function ProjectDetailPage() {
                                             <tr><td colSpan={3} className="py-8 text-center text-gray-400 text-sm">No patients yet</td></tr>
                                         ) : (
                                             patients.map(p => (
-                                                <>
+                                                <React.Fragment key={p.id}>
                                                     <tr key={p.id} className="border-b border-gray-100 cursor-pointer hover:bg-gray-50" onClick={() => togglePatient(p.id)}>
                                                         <td className="py-3 text-sm font-medium text-gray-900">{p.ext_patient_id}</td>
                                                         <td className="py-3 text-sm text-gray-500">{p.public_patient_id || '—'}</td>
@@ -243,7 +240,7 @@ function ProjectDetailPage() {
                                                             </td>
                                                         </tr>
                                                     )}
-                                                </>
+                                                </React.Fragment>
                                             ))
                                         )}
                                     </tbody>

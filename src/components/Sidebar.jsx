@@ -1,4 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useDarkMode } from './Layout.jsx';
+import { use } from 'react';
 
 const navItems = [
     {
@@ -43,15 +45,18 @@ const navItems = [
 function Sidebar() {
     const navigate = useNavigate();
     const location = useLocation();
+    const darkMode = useDarkMode();
 
     return (
-        <div className="fixed left-0 top-14 h-[calc(100vh-3.5rem)] w-12 bg-white border-r border-gray-200 flex flex-col items-center py-4 gap-6 z-40">
+        <div className={`fixed left-0 top-14 h-[calc(100vh-3.5rem)] w-12 border-r flex flex-col items-center py-4 gap-6 z-40 ${darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
             {navItems.map((item, i) => (
                 <button
                     key={i}
                     onClick={() => navigate(item.path)}
                     title={item.label}
-                    className={`w-8 h-8 flex items-center justify-center rounded transition-colors ${location.pathname === item.path ? 'text-blue-600' : 'text-gray-400 hover:text-gray-700'
+                    className={`w-8 h-8 flex items-center justify-center rounded transition-colors ${location.pathname === item.path
+                            ? 'text-blue-500'
+                            : darkMode ? 'text-gray-500 hover:text-gray-200' : 'text-gray-400 hover:text-gray-700'
                         }`}
                 >
                     {item.icon}

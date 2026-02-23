@@ -1,16 +1,16 @@
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth } from 'react-oidc-context';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout.jsx';
 
 function PatientsPage() {
-    const { getAccessTokenSilently } = useAuth0();
+    const auth = useAuth();
     const [patients, setPatients] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         async function load() {
-            const token = await getAccessTokenSilently();
+            const token = auth.user?.access_token;
             const res = await fetch('http://127.0.0.1:8000/api/patients', {
                 headers: { Authorization: `Bearer ${token}` }
             });
