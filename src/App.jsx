@@ -11,9 +11,25 @@ function App() {
   const auth = useAuth();
 
   console.log("APP AUTH:", auth.isAuthenticated, auth.isLoading);
-  if (auth.isLoading) return <div className="flex items-center justify-center h-screen bg-gray-100 text-gray-500">Loading...</div>;
+  if (auth.isLoading) return (
+    <div className="flex items-center justify-center h-screen bg-gray-100 text-gray-500">Loading...</div>
+  );
 
-  if (auth.error) return <div className="flex items-center justify-center h-screen bg-gray-100 text-red-500">Error: {auth.error.message}</div>;
+
+  if (auth.error) return (
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 max-w-md text-center">
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">Authentication Unavailable</h2>
+        <p className="text-gray-500 text-sm mb-4">
+          The authentication server is not reachable.
+        </p>
+        <p className="text-gray-500 text-sm mb-4">
+          Set Up Keycloak.
+        </p>
+        <p className="text-xs text-red-400 font-mono">{auth.error.message}</p>
+      </div>
+    </div>
+  );
 
   return (
     <Routes>
