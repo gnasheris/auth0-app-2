@@ -27,6 +27,23 @@ def get_or_create_user(
                 db.add(membership)
                 db.delete(invite)
 
+    elif not user.email and email:
+    # check if another user already has this email
+        existing = db.query(User).filter(User.email == email).first()
+        if not existing:
+            user.email = email
+            pending = db.query(ProjectInvite).filter(ProjectInvite.email == email).all()
+            for invite in pending:
+                already_member = db.query(ProjectMember).filter(
+                ProjectMember.project_id == invite.project_id,
+                ProjectMember.user_id == user.id
+            ).first()
+            if not already_member:
+                membership = ProjectMember(user_id=user.id, project_id=invite.project_id, role=invite.role)
+                db.add(membership)
+            db.delete(invite)
+        db.commit()
+
         db.commit()
         db.refresh(user)
 

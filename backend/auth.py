@@ -49,7 +49,7 @@ def decode_token(token: str) -> dict:
     except JWTError as e:
         raise HTTPException(status_code=401, detail=f"Invalid token: {str(e)}")
 
-
+#verification code
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Security(bearer_scheme)
 ) -> dict:
