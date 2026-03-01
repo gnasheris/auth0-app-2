@@ -16,6 +16,9 @@ def get_or_create_user(
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
+        existing_by_email = db.query(User).filter(User.email == email).first()
+        if existing_by_email:
+            return existing_by_email
         user = User(id=user_id, email=email)
         db.add(user)
         db.flush()

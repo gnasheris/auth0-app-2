@@ -41,7 +41,10 @@ function Navbar({ darkMode, setDarkMode }) {
                     )}
                 </button>
                 <button
-                    onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                    onClick={() => {
+                        auth.removeUser();
+                        window.location.href = `http://localhost:8080/realms/data-registry/protocol/openid-connect/logout?post_logout_redirect_uri=${window.location.origin}&client_id=data-registry`;
+                    }}
                     className="text-white text-sm font-medium hover:text-gray-300 transition-colors"
                 >
                     Log Out

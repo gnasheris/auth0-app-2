@@ -9,6 +9,8 @@ import DocsPage from './pages/DocsPage.jsx';
 
 function App() {
   const auth = useAuth();
+
+  console.log("APP AUTH:", auth.isAuthenticated, auth.isLoading);
   if (auth.isLoading) return <div className="flex items-center justify-center h-screen bg-gray-100 text-gray-500">Loading...</div>;
 
   if (auth.error) return <div className="flex items-center justify-center h-screen bg-gray-100 text-red-500">Error: {auth.error.message}</div>;

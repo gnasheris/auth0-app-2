@@ -16,10 +16,13 @@ ALGORITHMS = ["RS256"]
 
 bearer_scheme = HTTPBearer()
 
+AUTH0_ISSUER = f"http://{AUTH0_DOMAIN}/"
+
 
 @lru_cache(maxsize=1)
 def get_jwks():
-    url = f"https://{AUTH0_DOMAIN}/.well-known/jwks.json"
+    url = f"http://{AUTH0_DOMAIN}/protocol/openid-connect/certs"
+    # running on auth0 is     url = f"https://{AUTH0_DOMAIN}/.well-known/jwks.json"
     response = httpx.get(url)
     response.raise_for_status()
     return response.json()
@@ -29,6 +32,8 @@ def decode_token(token: str) -> dict:
     try:
         jwks = get_jwks()
         header = jwt.get_unverified_header(token)
+
+        unverified = jwt.get_unverified_claims(token)
 
         key = next(
             (k for k in jwks["keys"] if k["kid"] == header["kid"]),
@@ -42,7 +47,7 @@ def decode_token(token: str) -> dict:
             key,
             algorithms=ALGORITHMS,
             audience=AUTH0_AUDIENCE,
-            issuer=f"https://{AUTH0_DOMAIN}/"
+            issuer=f"http://{AUTH0_DOMAIN}"
         )
         return payload
 
@@ -67,3 +72,13 @@ async def get_user_email(token: str) -> str:
         )
         data = r.json()
         return data.get("email")
+    
+async def get_user_email(token: str) -> str:
+    async with httpx.AsyncClient() as client:
+        r = await client.get(
+            f"http://{AUTH0_DOMAIN}/protocol/openid-connect/userinfo",  # http, and keycloak path
+            headers={"Authorization": f"Bearer {token}"}
+        )
+        data = r.json()
+        return data.get("email")
+    

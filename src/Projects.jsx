@@ -14,13 +14,15 @@ function Projects() {
     const darkMode = useDarkMode();
 
     useEffect(() => {
+        console.log("AUTH STATE:", auth.isAuthenticated, auth.user);
         async function load() {
             const token = auth.user?.access_token;
             const data = await getProjects(token);
-            setProjects(data);
+            setProjects(Array.isArray(data) ? data : []);
+            setProjects(Array.isArray(data) ? data : []);
         }
         load();
-    }, []);
+    }, [auth.isAuthenticated]);
 
     async function handleCreate() {
         if (!newName.trim()) return;
@@ -88,6 +90,12 @@ function Projects() {
         }
         const data = await getProjects(token);
         setProjects(data);
+    }
+    async function load() {
+        const token = auth.user?.access_token;
+        console.log("TOKEN:", token);  // add this
+        const data = await getProjects(token);
+        setProjects(Array.isArray(data) ? data : []);
     }
 
     return (
