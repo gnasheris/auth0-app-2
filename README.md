@@ -1,6 +1,6 @@
 # Auth0 App Research Data Registry
 
-I developed this full-stack data-registry clone in order to understand authentication flow for Auth0 and OIDC compliancy. By using the OIDC library, the app promotes extensibility to other open source software such as Keycloak. The app mimics [WEHI's Data Registry](https://data-registry.wehi-rcp.cloud.edu.au/patients). 
+I developed a full-stack data-registry clone in order to understand authentication flow for Auth0 and OIDC compliancy. By using the OIDC library, the app promotes extensibility to other open source software such as Keycloak. The app mimics [WEHI's Data Registry](https://data-registry.wehi-rcp.cloud.edu.au/patients). 
 
 The aim of my internship was to successfully get to Step 5 of this diagram, with each step being cruical to my understanding of authentication and authorization with OIDC.
 
