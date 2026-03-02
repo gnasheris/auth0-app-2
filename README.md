@@ -27,8 +27,7 @@ To see my implementation of Auth0 and Keycloak using OIDC on WEHI RCP's Data Reg
 ## Features
 
 - Project, dataset, patient, and sample management
-- CSV data import
-- Role-based access control and project invitations
+- Role-based access control and project invitations (Auth0)
 - OIDC-compliant authentication — works with Auth0, Keycloak, Google, or any standard identity provider
 - Dark mode
 - Docker-ready for local development
