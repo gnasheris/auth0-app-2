@@ -118,6 +118,14 @@ Then run:
 npm install
 npm run dev
 ```
+If Vite crashes:
+```bash
+rm -rf node_modules
+rm -rf node_modules/.vite
+rm package-lock.json
+npm install
+npm run dev
+```
 
 ### 5. Open the app
 
