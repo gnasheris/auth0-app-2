@@ -41,7 +41,10 @@ function Navbar({ darkMode, setDarkMode }) {
                     )}
                 </button>
                 <button
-                    onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                    onClick={() => {
+                        auth.removeUser();
+                        window.location.href = window.location.origin;
+                    }}
                     className="text-white text-sm font-medium hover:text-gray-300 transition-colors"
                 >
                     Log Out
