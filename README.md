@@ -55,6 +55,16 @@ cd auth0-app-2
 docker run --name redmane-db -e POSTGRES_PASSWORD=password -e POSTGRES_DB=mydb -p 5432:5432 -d postgres
 ```
 
+If you see a "container name already in use" error, the container already exists — just start it:
+```bash
+docker start redmane-db
+```
+
+To verify it's running:
+```bash
+docker ps | grep redmane-db
+```
+
 ### 3. Set up the backend
 
 Create `backend/.env`:
@@ -67,6 +77,29 @@ AUTH0_AUDIENCE=https:Auth0-App-2
 Then run:
 ```bash
 cd backend
+pip install -r requirements.txt
+pip install python-dotenv
+python -c "from database import engine; from models import Base; Base.metadata.create_all(engine)"
+uvicorn main:app --reload
+```
+### Backend commands (macOS with Anaconda)
+
+If you have Anaconda installed, use the full Python path to avoid conflicts:
+```bash
+/Users/YOUR_USERNAME/anaconda3/bin/pip install -r requirements.txt
+/Users/YOUR_USERNAME/anaconda3/bin/pip install python-dotenv
+/Users/YOUR_USERNAME/anaconda3/bin/python -c "from database import engine; from models import Base; Base.metadata.create_all(engine)"
+/Users/YOUR_USERNAME/anaconda3/bin/python -m uvicorn main:app --reload
+```
+Debugging Statements
+```bash
+pkill -f uvicorn
+lsof -ti :8000 | xargs kill -9
+```
+
+Or if you're using a virtual environment:
+```bash
+source .venv/bin/activate
 pip install -r requirements.txt
 python -c "from database import engine; from models import Base; Base.metadata.create_all(engine)"
 uvicorn main:app --reload
@@ -108,7 +141,7 @@ REDMANE is built on standard OIDC. Swapping providers requires only environment 
 
 ### Option B — Keycloak (recommended for institutions)
 
-Keycloak is self-hosted and open-source. Ideal for universities that require data sovereignty or want researchers to log in with existing university credentials via Active Directory/LDAP.
+Keycloak is self-hosted and open-source.
 
 #### Switch Branches
 ```bash
