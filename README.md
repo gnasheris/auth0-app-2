@@ -32,6 +32,9 @@ To see my implementation of Auth0 and Keycloak using OIDC on WEHI RCP's Data Reg
 - Dark mode
 - Docker-ready for local development
 
+## At a Glance
+<img width="867" height="500" alt="Screenshot 2026-03-03 at 12 00 51 pm" src="https://github.com/user-attachments/assets/b74ebf6b-cce4-43a2-abbf-43b3ff61b454" />
+
 ---
 
 ## Quick Start (with shared demo Auth0)
